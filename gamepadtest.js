@@ -17,18 +17,28 @@ function connecthandler(e) {
   addgamepad(e.gamepad);
 }
 function addgamepad(gamepad) {
+  var keys = new Array("X", "O", "[]", "/\\", "L1", "R1", "L2", "R2", "Sh", "Op", "L3", "R3", "DU", "DD", "DL", "DR", "PS", "Pad");
+  var axes_names = new Array("LX", "LY", "RX", "RY")
+  var gamepadType = new Array("Play Station DS", "XBOX One")
   controllers[gamepad.index] = gamepad; var d = document.createElement("div");
   d.setAttribute("id", "controller" + gamepad.index);
   var t = document.createElement("h1");
   t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
   d.appendChild(t);
+
+  var gt = document.createElement("div");
+  gt.className = "gamepadType"
+  gt.appendChild(document.createTextNode("GamePad type: " + gamepadType[0]));
+  d.appendChild(gt);
+  
+
   var b = document.createElement("div");
   b.className = "buttons";
   for (var i=0; i<gamepad.buttons.length; i++) {
     var e = document.createElement("span");
     e.className = "button";
     //e.id = "b" + i;
-    e.innerHTML = i;
+    e.innerHTML = keys[i];
     b.appendChild(e);
   }
   d.appendChild(b);
@@ -41,7 +51,7 @@ function addgamepad(gamepad) {
     e.setAttribute("min", "-1");
     e.setAttribute("max", "1");
     e.setAttribute("value", "0");
-    e.innerHTML = i;
+    e.innerHTML = axes_names[i];
     a.appendChild(e);
   }
   d.appendChild(a);
