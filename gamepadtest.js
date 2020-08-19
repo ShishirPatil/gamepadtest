@@ -23,7 +23,7 @@ function connecthandler(e) {
 }
 function addgamepad(gamepad) {
   var ps4_keys = new Array("X", "O", "[]", "/\\", "L1", "R1", "L2", "R2", "Sh", "Op", "L3", "R3", "DU", "DD", "DL", "DR", "PS", "Pad");
-  var xbox_keys = new Array("A", "B", "X", "Y", "LB", "RB", "Ba", "St", "L3", "R3", "LT", "RT", "X", 14, 15, 16, 17, 18);
+  var xbox_keys = new Array("A", "B", "X", "Y", "LB", "RB", "Ba", "St", "L3", "R3", "LT", "RT", "Xbx", 14, 15, 16, 17, 18);
   var keys_list = new Array(ps4_keys, xbox_keys);
   var axes_names = new Array("LX", "LY", "RX", "RY")
   var gamepadType = new Array("Play Station DS", "XBOX One")
