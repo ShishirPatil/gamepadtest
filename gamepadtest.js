@@ -10,6 +10,7 @@
  *
  * Forked by ShishirPatil from https://github.com/luser/gamepadtest on Aug 12, 2020
  */
+
 var haveEvents = 'GamepadEvent' in window;
 var haveWebkitEvents = 'WebKitGamepadEvent' in window;
 var controllers = {};
@@ -86,12 +87,13 @@ function addgamepad(gamepad) {
   // Credits
   var cred = document.createElement("div");
   var t1 = document.createElement("p");
-  t1.innerHTML = '<p> \r\n By Shishir. Forked from <a href="https://github.com/luser">@luser</a></p>';
+  t1.innerHTML = '<p> \r\n By <a href="https://shishirpatil.github.io/">Shishir</a>. Forked from <a href="https://github.com/luser">@luser</a></p>';
   cred.append(t1);
   d.appendChild(cred)
 
   // Ending stuff
   document.getElementById("start").style.display = "none";
+  document.getElementById("start-body").style.display = "none";
   document.body.appendChild(d);
   rAF(updateStatus);
 }
