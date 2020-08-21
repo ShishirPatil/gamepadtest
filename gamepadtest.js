@@ -17,18 +17,51 @@ function connecthandler(e) {
   addgamepad(e.gamepad);
 }
 function addgamepad(gamepad) {
+  var ps4_keys = new Array("X", "O", "[]", "/\\", "L1", "R1", "L2", "R2", "Sh", "Op", "L3", "R3", "DU", "DD", "DL", "DR", "PS", "Pad");
+  var xbox_keys = new Array("A", "B", "X", "Y", "LB", "RB", "Ba", "St", "L3", "R3", "LT", "RT", "Xbx", 14, 15, 16, 17, 18);
+  var keys_list = new Array(ps4_keys, xbox_keys);
+  var axes_names = new Array("LX", "LY", "RX", "RY")
+  var gamepadType = new Array("Play Station DS", "XBOX One")
+  var defaultgamePadType = 0
+  var keys = keys_list[defaultgamePadType];
+  // Get controller
   controllers[gamepad.index] = gamepad; var d = document.createElement("div");
   d.setAttribute("id", "controller" + gamepad.index);
   var t = document.createElement("h1");
-  t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
+  t.appendChild(document.createTextNode("Gamepad name: " + gamepad.id));
   d.appendChild(t);
+  // Toggle gamepad type
+  var button = document.createElement("input");
+  button.type = "button";
+  button.value = "Toggle GamePad Type";
+  button.onclick = toggleGamepadType;
+  d.appendChild(button);
+  linebreak = document.createElement("br");
+  d.appendChild(linebreak);
+  // Display type of controller
+  var gt = document.createElement("div");
+  gt.id = 'toggle';
+  gt.innerHTML = '<h2> Type: '+ gamepadType[defaultgamePadType] +' </h2>'
+  d.appendChild(gt);
+  
+  // Update display on toggle
+  function toggleGamepadType(){
+    defaultgamePadType = 1 - defaultgamePadType;
+    document.getElementById("toggle").innerHTML = '<h2> Type: '+ gamepadType[defaultgamePadType] +' </h2>';
+    keys = keys_list[defaultgamePadType]
+    for (var i=0; i<gamepad.buttons.length; i++) {
+        e.id = "b" + i;
+        document.getElementById(e.id).innerHTML = keys[i];
+      }
+  } 
+  // Create the layout
   var b = document.createElement("div");
   b.className = "buttons";
   for (var i=0; i<gamepad.buttons.length; i++) {
     var e = document.createElement("span");
     e.className = "button";
-    //e.id = "b" + i;
-    e.innerHTML = i;
+    e.id = "b" + i;
+    e.innerHTML = keys[i];
     b.appendChild(e);
   }
   d.appendChild(b);
@@ -37,11 +70,11 @@ function addgamepad(gamepad) {
   for (i=0; i<gamepad.axes.length; i++) {
     e = document.createElement("meter");
     e.className = "axis";
-    //e.id = "a" + i;
+    e.id = "a" + i;
     e.setAttribute("min", "-1");
     e.setAttribute("max", "1");
     e.setAttribute("value", "0");
-    e.innerHTML = i;
+    e.innerHTML = axes_names[i];
     a.appendChild(e);
   }
   d.appendChild(a);
