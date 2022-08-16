@@ -4,19 +4,30 @@
 <meta charset="utf-8">
 <!--
 
-Gamepad API Test
+Original:
 
-Written in 2013 by Ted Mielczarek <ted@mielczarek.org>
+	Gamepad API Test
 
-To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
+	Written in 2013 by Ted Mielczarek <ted@mielczarek.org>
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+	To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
+
+	You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+Forked by ShishirPatil from https://github.com/luser/gamepadtest on Aug 12, 2020
 
 -->
+
 <script type="text/javascript" src="gamepadtest.js"></script>
+<meta name="keywords" content ="Gamepad tester, Gaming controller test, gaming controller online test, Xbox controller test, ps4 controller test, ps4 DS, ps4 dual shock, gaming controller,">
+
 <style>
-.buttons, .axes {
+.axes {
   padding: 1em;
+}
+
+.buttons {
+  margin-left: 1em;
 }
 
 /*meter*/.axis {
@@ -25,6 +36,9 @@ You should have received a copy of the CC0 Public Domain Dedication along with t
 }
 
 .button {
+  display: inline-block;
+  width: 1em;
+  text-align: center;
   padding: 1em;
   border-radius: 20px;
   border: 1px solid black;
@@ -37,10 +51,21 @@ You should have received a copy of the CC0 Public Domain Dedication along with t
 .pressed {
   border: 1px solid red;
 }
+
+.touched::after {
+  content: "touch";
+  display: block;
+  position: absolute;
+  margin-top: -0.2em;
+  margin-left: -0.5em;
+  font-size: 0.8em;
+  opacity: 0.7;
+}
 </style>
 </head>
 <body>
 <h2 id="start">Press a button on your controller to start</h2>
-<a href="https://github.com/luser/gamepadtest"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+<p id="start-body"> By <a href="https://shishirpatil.github.io/">Shishir</a>. Forked from <a href="https://github.com/luser">@luser</a></p>
+<a href="https://github.com/ShishirPatil/gamepadtest"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 </body>
 </html>
