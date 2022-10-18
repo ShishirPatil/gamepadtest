@@ -1,8 +1,8 @@
 This is a simple test for your gaming controller. 
 
-Uses the [Gamepad API](http://www.w3.org/TR/gamepad/) in JavaScript. 
+Connect your controller and launch the [website](shishirpatil.github.io/gamepadtest/). Uses the [Gamepad API](http://www.w3.org/TR/gamepad/) in JavaScript. 
 
-Forked by ShishirPatil from [@luser](https://github.com/luser/gamepadtest on Aug 12, 2020)
+Forked by ShishirPatil from [@luser](https://github.com/luser/gamepadtest) on Aug 12, 2020.
 
 
 Originally written in 2013 by Ted Mielczarek <ted@mielczarek.org>. Original License Message:
