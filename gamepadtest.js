@@ -13,15 +13,28 @@
 
 var haveEvents = 'GamepadEvent' in window;
 var haveWebkitEvents = 'WebKitGamepadEvent' in window;
+var requestAnimationFrameX = window.requestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.webkitRequestAnimationFrame;
+  
 var controllers = {};
-var rAF = window.mozRequestAnimationFrame ||
-  window.webkitRequestAnimationFrame ||
-  window.requestAnimationFrame;
 
-function connecthandler(e) {
-  addgamepad(e.gamepad);
+function connecthandler(event) {
+  addgamepad(event.gamepad);
 }
 function addgamepad(gamepad) {
+  var i;
+  var controllerButton;
+  var controllerAxe;
+  controllers[gamepad.index] = gamepad;
+  
+  var controllerDiv = document.createElement("div");
+  controllerDiv.setAttribute("id", "controller" + gamepad.index);
+  
+  var controllerH1 = document.createElement("h1");
+  controllerH1.appendChild(document.createTextNode("gamepad: " + gamepad.id));
+  
+
   var ps4_keys = new Array("X", "O", "[]", "/\\", "L1", "R1", "L2", "R2", "Sh", "Op", "L3", "R3", "DU", "DD", "DL", "DR", "PS", "Pad");
   var xbox_keys = new Array("A", "B", "X", "Y", "LB", "RB", "Ba", "St", "L3", "R3", "LT", "RT", "Xbx", 14, 15, 16, 17, 18);
   var keys_list = new Array(ps4_keys, xbox_keys);
@@ -60,98 +73,115 @@ function addgamepad(gamepad) {
       }
   } 
   // Create the layout
-  var b = document.createElement("div");
-  b.className = "buttons";
-  for (var i=0; i<gamepad.buttons.length; i++) {
-    var e = document.createElement("span");
-    e.className = "button";
-    e.id = "b" + i;
-    e.innerHTML = keys[i];
-    b.appendChild(e);
-  }
-  d.appendChild(b);
-  var a = document.createElement("div");
-  a.className = "axes";
-  for (i=0; i<gamepad.axes.length; i++) {
-    e = document.createElement("meter");
-    e.className = "axis";
-    e.id = "a" + i;
-    e.setAttribute("min", "-1");
-    e.setAttribute("max", "1");
-    e.setAttribute("value", "0");
-    e.innerHTML = axes_names[i];
-    a.appendChild(e);
-  }
-  d.appendChild(a);
-  
-  // Credits
-  var cred = document.createElement("div");
-  var t1 = document.createElement("p");
-  t1.innerHTML = '<p> \r\n By <a href="https://shishirpatil.github.io/">Shishir</a>. Forked from <a href="https://github.com/luser">@luser</a></p>';
-  cred.append(t1);
-  d.appendChild(cred)
 
-  // Ending stuff
+  var buttonsContainer = document.createElement("div");
+  buttonsContainer.className = "buttons";
+  for (i=0; i<gamepad.buttons.length; i++) {
+    controllerButton = document.createElement("span");
+    controllerButton.className = "button";
+    controllerButton.textContent = i;
+    buttonsContainer.appendChild(controllerButton);
+  }
+  
+  var axesContainer = document.createElement("div");
+  axesContainer.className = "axes";
+  for (i=0; i<gamepad.axes.length; i++) {
+    controllerAxe = document.createElement("meter");
+    controllerAxe.className = "axis";
+    controllerAxe.setAttribute("min", "-1");
+    controllerAxe.setAttribute("max", "1");
+    controllerAxe.setAttribute("value", "0");
+    // fallback content
+    controllerAxe.textContent = i + ": 0";
+    axesContainer.appendChild(controllerAxe);
+  }
+  
   document.getElementById("start").style.display = "none";
-  document.getElementById("start-body").style.display = "none";
-  document.body.appendChild(d);
-  rAF(updateStatus);
+  controllerDiv.appendChild(controllerH1);
+  controllerDiv.appendChild(buttonsContainer);
+  controllerDiv.appendChild(axesContainer);
+  document.body.appendChild(controllerDiv);
+  
+  requestAnimationFrameX(updateStatus);
+
+  t1.innerHTML = '<p> \r\n By <a href="https://shishirpatil.github.io/">Shishir</a>. Forked from <a href="https://github.com/luser">@luser</a></p>';
+
 }
 
-function disconnecthandler(e) {
-  removegamepad(e.gamepad);
+function disconnecthandler(event) {
+  removegamepad(event.gamepad);
 }
 
 function removegamepad(gamepad) {
-  var d = document.getElementById("controller" + gamepad.index);
-  document.body.removeChild(d);
+  var controllerDiv = document.getElementById("controller" + gamepad.index);
+  document.body.removeChild(controllerDiv);
   delete controllers[gamepad.index];
 }
 
 function updateStatus() {
+  var key;
+  var i;
+  var controller;
+  var controllerDiv;
+  var controllerButtons;
+  var controllerButton;
+  var value;
+  var pressed;
+  var percentage;
+  var controllerAxes;
+  var controllerAxe;
   scangamepads();
-  for (j in controllers) {
-    var controller = controllers[j];
-    var d = document.getElementById("controller" + j);
-    var buttons = d.getElementsByClassName("button");
-    for (var i=0; i<controller.buttons.length; i++) {
-      var b = buttons[i];
-      var val = controller.buttons[i];
-      var pressed = val == 1.0;
-      var touched = false;
-      if (typeof(val) == "object") {
-        pressed = val.pressed;
-        if ('touched' in val) {
-          touched = val.touched;
-        }
-        val = val.value;
+  for (key in controllers) {
+    controller = controllers[key];
+    controllerDiv = document.getElementById("controller" + key);
+    controllerButtons = controllerDiv.getElementsByClassName("button");
+    for (i=0; i<controller.buttons.length; i++) {
+      controllerButton = controllerButtons[i];
+      value = controller.buttons[i];
+      if (typeof(value) == "object") {
+        pressed = value.pressed;
+        value = value.value;
+      } else {
+        pressed = (value == 1.0);
       }
-      var pct = Math.round(val * 100) + "%";
-      b.style.backgroundSize = pct + " " + pct;
-      b.className = "button";
+      percentage = Math.round(value * 100) + "%";
+      
+      controllerButton.style.backgroundSize = percentage + " " + percentage;
       if (pressed) {
-        b.className += " pressed";
-      }
-      if (touched) {
-        b.className += " touched";
+        controllerButton.className = "button pressed";
+      } else {
+        controllerButton.className = "button";
       }
     }
 
-    var axes = d.getElementsByClassName("axis");
-    for (var i=0; i<controller.axes.length; i++) {
-      var a = axes[i];
-      a.innerHTML = i + ": " + controller.axes[i].toFixed(4);
-      a.setAttribute("value", controller.axes[i]);
+    controllerAxes = controllerDiv.getElementsByClassName("axis");
+    for (i=0; i<controller.axes.length; i++) {
+      value = controller.axes[i]
+      controllerAxe = controllerAxes[i];
+      controllerAxe.value = value;
+      // fallback content
+      controllerAxe.textContent = i + ": " + value.toFixed(4);
     }
   }
-  rAF(updateStatus);
+  requestAnimationFrameX(updateStatus);
 }
 
 function scangamepads() {
-  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-  for (var i = 0; i < gamepads.length; i++) {
-    if (gamepads[i] && (gamepads[i].index in controllers)) {
-      controllers[gamepads[i].index] = gamepads[i];
+  // still required for chrome
+  var i;
+  var gamepads = navigator.getGamepads ?
+                    navigator.getGamepads() :
+                    (navigator.webkitGetGamepads ?
+                        navigator.webkitGetGamepads() :
+                        []);
+  for (i = 0; i < gamepads.length; i++) {
+    if (gamepads[i]) {
+      if (!(gamepads[i].index in controllers)) {
+        addgamepad(gamepads[i]);
+      } else {
+        controllers[gamepads[i].index] = gamepads[i];
+      }
+
     }
   }
 }
